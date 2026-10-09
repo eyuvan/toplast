@@ -1,0 +1,112 @@
+:root {
+    --bg-dark: #0f172a;
+    --card-bg: #1e293b;
+    --border-color: #334155;
+    --text-white: #f8fafc;
+    --accent-blue: #3b82f6;
+    --accent-gold: #f59e0b;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    font-family: system-ui, -apple-system, sans-serif;
+    margin: 0; padding-bottom: 80px;
+    user-select: none; -webkit-tap-highlight-color: transparent;
+}
+
+/* MANDATORY FULL SCREEN OVERLAY GATEWAY */
+.gate-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #0f172a;
+    display: flex; justify-content: center; align-items: center; z-index: 500;
+}
+.gate-content {
+    background-color: #1e293b; border: 2px solid var(--border-color);
+    padding: 40px 24px; border-radius: 16px; text-align: center; max-width: 85%;
+}
+.gate-content h2 { font-size: 19px; color: var(--text-white); margin-bottom: 8px; }
+.gate-content p { font-size: 13px; color: #94a3b8; margin-bottom: 24px; }
+.gate-btn-row { display: flex; flex-direction: column; gap: 14px; }
+.gate-stake-btn {
+    background-color: var(--accent-blue); color: var(--text-white);
+    border: none; padding: 16px; font-size: 16px; font-weight: 800;
+    border-radius: 10px; cursor: pointer; box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
+}
+.gate-stake-btn.btn-orange { background-color: var(--accent-gold); box-shadow: 0 4px 6px rgba(245, 158, 11, 0.3); }
+
+/* TOP BAR GRID PLACEMENT */
+.top-bar {
+    background-color: var(--card-bg); border-bottom: 2px solid var(--border-color);
+    padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0; z-index: 100;
+}
+.header-group-left { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.header-group-right { display: flex; gap: 6px; align-items: center; margin-left: auto; }
+.top-item {
+    background-color: #0f172a; border: 1px solid var(--border-color);
+    padding: 6px 10px; border-radius: 6px; font-weight: 700; font-size: 11px;
+}
+.metrics-btn { border-color: var(--accent-blue); color: #60a5fa; }
+.timer-section { border-color: var(--accent-gold); color: var(--accent-gold); min-width: 50px; text-align: center; }
+
+/* COMPACT NUMBER CHIPS GRID */
+.selection-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(46px, 1fr));
+    gap: 6px; padding: 10px; max-height: 75vh; overflow-y: auto;
+}
+.card-box {
+    background-color: var(--card-bg); border: 1px solid var(--border-color);
+    padding: 10px 0; text-align: center; border-radius: 6px; font-weight: 800; font-size: 13px;
+    cursor: pointer; transition: background 0.1s ease;
+}
+.card-box.selected { background-color: var(--accent-blue); border-color: #60a5fa; }
+
+/* SMALL MONITOR DISPLAYS */
+.called-number-wrapper { display: flex; justify-content: center; margin: 8px 0; }
+.called-ball-screen { font-size: 22px; font-weight: 900; padding: 8px 24px; border-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); text-shadow: 1px 1px 2px black; }
+.called-ball-empty { background: #475569; font-size: 22px; padding: 8px 24px; border-radius: 30px; }
+
+/* INDEPENDENT SINGLE VERTICAL COLUMN GRID ARRAYS */
+.bingo-board-container { background-color: var(--card-bg); border-radius: 8px; padding: 10px; margin: 8px; }
+.bingo-header-row { display: grid; grid-template-columns: repeat(5, 1fr); text-align: center; font-weight: 900; font-size: 14px; color: var(--accent-gold); margin-bottom: 6px; }
+.bingo-columns-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.board-column { display: flex; flex-direction: column; gap: 4px; }
+.board-num-cell { background-color: #0f172a; border: 1px solid var(--border-color); color: var(--text-white); text-align: center; padding: 4px 0; font-size: 11px; font-weight: 700; border-radius: 4px; }
+
+/* DYNAMIC BALL-HIT MATRIX TRACK COLOR HIGHLIGHTS */
+.board-column#board-b .board-num-cell.marked-board-cell { background-color: #ff7b00 !important; border-color: #ffa24d; }
+.board-column#board-i .board-num-cell.marked-board-cell { background-color: #0066ff !important; border-color: #4d94ff; }
+.board-column#board-n .board-num-cell.marked-board-cell { background-color: #ff007f !important; border-color: #ff4da6; }
+.board-column#board-g .board-num-cell.marked-board-cell { background-color: #00cc44 !important; border-color: #33ff77; }
+.board-column#board-o .board-num-cell.marked-board-cell { background-color: #e6e600 !important; border-color: #ffff33; color: #000000; }
+
+/* ACTIVE USER SLOTS VIEWPORTS */
+.player-cards-container { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 5px; }
+.mini-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; width: 190px; }
+.card-title-header { text-align: center; font-weight: bold; margin-bottom: 4px; font-size: 12px; border-bottom: 1px solid var(--border-color); color: #94a3b8; }
+.grid-5x5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.cell-5x5 { background-color: #0f172a; border: 1px solid var(--border-color); text-align: center; padding: 6px 0; font-size: 11px; font-weight: bold; border-radius: 4px; }
+.cell-5x5.marked { background-color: var(--accent-blue); }
+.cell-5x5.free-space { background-color: #475569; }
+
+/* FIXED NAV STRIP RAIL STYLES */
+.nav-bar { position: fixed; bottom: 0; width: 100%; display: flex; background-color: var(--card-bg); border-top: 2px solid var(--border-color); z-index: 200; }
+.nav-item { flex: 1; background: none; border: none; color: #94a3b8; padding: 10px; display: flex; flex-direction: column; align-items: center; font-size: 11px; cursor: pointer; }
+.nav-item.active { color: var(--accent-blue); }
+.nav-item i { font-size: 16px; margin-bottom: 2px; }
+
+.tab-view { display: none; padding: 10px; }
+.tab-view.active { display: block; }
+.hidden { display: none !important; }
+
+/* CONTROL BUTTONS */
+.refresh-btn { background-color: #334155 !important; border: 1px solid #475569 !important; color: #cbd5e1 !important; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 11px; display: flex; align-items: center; gap: 4px; }
+.status-alert-text { background-color: #ef4444; color: #ffffff; border: 1px solid #f87171; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 11px; }
+
+/* VICTORY PAPERS CELEBRATION BOX OVERLAYS */
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.modal-content { background: var(--card-bg); border: 2px solid var(--accent-gold); padding: 20px; border-radius: 12px; text-align: center; max-width: 80%; }
+.trophy-icon { font-size: 40px; color: var(--accent-gold); margin-bottom: 6px; }
+.winner-matrix-box { margin: 15px auto 0 auto; background-color: #0f172a; border: 1px solid var(--border-color); border-radius: 8px; padding: 6px; width: 140px; }
+.grid-5x5.compact-preview .cell-5x5 { padding: 4px 0; font-size: 9px; border-radius: 3px; }

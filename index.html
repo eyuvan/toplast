@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habesha Bingo</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <script src="https://telegram.org"></script>
+</head>
+<body>
+
+    <!-- MANDATORY FULL-SCREEN STAKE SELECTION GATEWAY OVERLAY -->
+    <div id="stake-gate-screen" class="gate-overlay">
+        <div class="gate-content">
+            <h2>Welcome to Habesha Bingo</h2>
+            <h3 class="amharic-motto">"ከመልክ ዕድል ያምራል"</h3>
+            <p>ለመጀመር የውድድር መጠን ይምረጡ / Choose a stake to start game</p>
+            <div class="gate-btn-row">
+                <button class="gate-stake-btn" onclick="selectStakeAndStartGame(10)">Play 10 Birr</button>
+                <button class="gate-stake-btn btn-orange" onclick="selectStakeAndStartGame(20)">Play 20 Birr</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOP BAR PANEL (መጀመሪያ ላይ በቋሚነት ተደብቆ ይቆያል) -->
+    <div class="top-bar hidden" id="main-top-bar">
+        <!-- ዙር 1፡ ካርቴላ በሚመረጥበት ጊዜ ብቻ የሚታይ -->
+        <div id="selection-header-metrics" class="header-group-left">
+            <div class="top-item">Play Stake: <span id="top-stake">10</span> ብር</div>
+            <div class="top-item">Main Wallet: <span id="top-main-wallet-sel">0</span> ብር</div>
+            <div class="top-item">Play Wallet: <span id="top-play-wallet-sel">10</span> ብር</div>
+            <div id="wallet-status-alert" class="status-alert-text hidden">insufficient fund</div>
+        </div>
+
+        <!-- ዙር 2፡ ልክ ታይመሩ 0 ሲሆን ብቻ በራስ-ሰር የሚተካ ንጹሕ የ 5 መለኪያዎች መስመር -->
+        <div id="gameplay-header-metrics" class="header-group-left hidden">
+            <div class="top-item metrics-btn">Game ID: <span id="metric-game-id">0001</span></div>
+            <div class="top-item metrics-btn">Derash: <span id="metric-derash">0</span> ብር</div>
+            <div class="top-item metrics-btn">Bet: <span id="metric-bet">10</span> ብር</div>
+            <div class="top-item metrics-btn">Players: <span id="metric-players">0</span></div>
+            <div class="top-item metrics-btn">Called: <span id="metric-called">0</span></div>
+            <div class="top-item">Main: <span id="top-main-wallet-game">0</span> ብር</div>
+            <div class="top-item">Play: <span id="top-play-wallet-game">10</span> ብር</div>
+        </div>
+
+        <!-- በቀኝ በኩል የሚቀመጡ የሰዓት እና የሪፍሬሽ ስብስብ -->
+        <div class="header-group-right">
+            <div class="top-item timer-section" id="timer-box-wrapper">
+                <i class="fa-solid fa-clock"></i> <span id="timer-sec">49</span>s
+            </div>
+            <button class="top-item refresh-btn" id="top-refresh-action-button" onclick="handleSessionRefresh()">
+                <i class="fa-solid fa-rotate-right"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN APP CANVAS TAB WINDOWS -->
+    <div class="main-content hidden" id="app-main-content">
+        <!-- 1. GAME VIEW TAB -->
+        <div id="tab-game" class="tab-view active">
+            <div id="selection-screen">
+                <div class="selection-grid" id="cards-grid"></div>
+            </div>
+
+            <div id="gameplay-screen" class="hidden">
+                <div class="gameplay-top">
+                    <!-- ትንሽ የኳስ መጥሪያ ስክሪን -->
+                    <div class="called-number-wrapper">
+                        <div id="called-ball-display" class="called-ball-empty">-</div>
+                    </div>
+
+                    <!-- ባለቀለም የቢንጎ ሰሌዳ በነጠላ አምድ ቁልቁል የተደረደሩ -->
+                    <div class="bingo-board-container">
+                        <div class="bingo-header-row">
+                            <div>B</div><div>I</div><div>N</div><div>G</div><div>O</div>
+                        </div>
+                        <div class="bingo-columns-grid">
+                            <div class="board-column" id="board-b"></div>
+                            <div class="board-column" id="board-i"></div>
+                            <div class="board-column" id="board-n"></div>
+                            <div class="board-column" id="board-g"></div>
+                            <div class="board-column" id="board-o"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- የ 5x5 ካርቴላ ማሳያ ኮንቴይነር -->
+                <div class="player-cards-container" id="player-cards-list"></div>
+            </div>
+        </div>
+
+        <!-- 2. WALLET VIEW TAB -->
+        <div id="tab-wallet" class="tab-view">
+            <h2>የኪስ ቦርሳ (Wallet)</h2>
+            <div class="wallet-card">
+                <div><p>Main Wallet</p><h3><span id="wallet-main-val">0</span> ብር</h3></div>
+                <div><p>Play Wallet</p><h3><span id="wallet-play-val">10</span> ብር</h3></div>
+            </div>
+        </div>
+
+        <!-- 3. HISTORY VIEW TAB -->
+        <div id="tab-history" class="tab-view">
+            <h2>የጨዋታ ታሪክ (Game History)</h2>
+            <div class="history-list">የተጫወቱት ጨዋታ የለም።</div>
+        </div>
+
+        <!-- 4. PROFILE VIEW TAB -->
+        <div id="tab-profile" class="tab-view">
+            <h2>Profile (የግል መገለጫ)</h2>
+            <div class="profile-card">
+                <p><strong>Telegram ID:</strong> <span id="prof-tg-id">12345678</span></p>
+                <p><strong>Telephone:</strong> <span id="prof-phone">09XXXXXXXX</span></p>
+                <hr style="border-color: #334155; margin: 12px 0;">
+                <p><strong>Main Wallet:</strong> <span id="prof-main-w">0</span> ብር</p>
+                <p><strong>Play Wallet:</strong> <span id="prof-play-w">10</span> ብር</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="nav-bar hidden" id="app-nav-bar">
+        <button class="nav-item active" onclick="switchTab('tab-game', this)"><i class="fa-solid fa-gamepad"></i><span>Game</span></button>
+        <button class="nav-item" onclick="switchTab('tab-wallet', this)"><i class="fa-solid fa-wallet"></i><span>Wallet</span></button>
+        <button class="nav-item" onclick="switchTab('tab-history', this)"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></button>
+        <button class="nav-item" onclick="switchTab('tab-profile', this)"><i class="fa-solid fa-user"></i><span>Profile</span></button>
+    </div>
+
+    <!-- የአሸናፊነት ማስታወቂያ ሞዳል ሳጥን -->
+    <div id="winner-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="trophy-icon"><i class="fa-solid fa-trophy"></i></div>
+            <h2>BINGO!</h2>
+            <p id="winner-announcement-text"></p>
+            <div id="winner-matrix-preview" class="winner-matrix-box"></div>
+        </div>
+    </div>
+
+    <!-- የውጭ ጃቫስክሪፕት ፋይል ማገናኛ ታግ -->
+    <script src="/static/game.js"></script>
+</body>
+</html>
